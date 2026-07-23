@@ -1,34 +1,16 @@
-# Python
+# ANTLR-generated files
+*.tokens
+*Lexer.py
+*Parser.py
+*Listener.py
+*Visitor.py
+*.interp
+
+# Python artifacts
 __pycache__/
-*.py[cod]
-*$py.class
-
-# Virtual environments
+*.pyc
 .venv/
-venv/
-env/
 
-# IDEs
-.vscode/
-.idea/
-
-# OS files
+# OS cruft
 .DS_Store
 Thumbs.db
-
-# Build & distribution
-build/
-dist/
-*.egg-info/
-
-# Logs
-*.log
-
-# Test & coverage
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Misc
-*.tmp
-roadmap.md

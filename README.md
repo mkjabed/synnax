@@ -1,2 +1,3 @@
 # Synnax
-Synnax is a Python-based educational compiler implementing lexical analysis, parsing, semantic analysis, and intermediate code generation.
+
+Under construction; build and run instructions will be added once they are real.
