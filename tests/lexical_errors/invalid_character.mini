@@ -1,0 +1,7 @@
+// EXPECTED: lexical error. '@' is not a valid character anywhere in the
+// Mini language — the lexer must report this with a line number rather
+// than silently skipping it or crashing.
+
+int x;
+x = 5 @ 3;
+print x;

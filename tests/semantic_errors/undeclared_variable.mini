@@ -1,0 +1,6 @@
+// EXPECTED: semantic error — "undeclared variable use". `y` is never
+// declared with a var-decl anywhere before this use.
+
+int x;
+x = 5;
+print y;

@@ -1,0 +1,34 @@
+// EXPECTED: compiles cleanly, no lexical/syntax/semantic errors, produces
+// valid TAC output. Exercises: all three types, arithmetic/relational/
+// logical expressions, nested blocks, if-else, while, print.
+
+int x;
+int y;
+float pi;
+bool flag;
+
+x = 10;
+y = 0;
+pi = 3.14;
+flag = true;
+
+while (x > 0) {
+    y = y + x;
+    x = x - 1;
+}
+
+if (flag == true) {
+    int inner;
+    inner = y % 3;
+    print inner;
+} else {
+    print x;
+}
+
+if (!flag) {
+    print pi;
+} else {
+    if (y > 0 && x == 0) {
+        print y;
+    }
+}

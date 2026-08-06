@@ -1,0 +1,17 @@
+// EXPECTED: syntax error(s). Line 5 is missing the terminating semicolon
+// after the assignment, which violates <assignment> ::= IDENTIFIER "="
+// <expr> ";". A second, independent violation on line 9 (missing closing
+// parenthesis on the while condition) is included deliberately to verify
+// the parser's error recovery continues past the first error rather than
+// halting silently after just one diagnostic.
+
+int x;
+int y;
+x = 5
+y = 10;
+
+while (x > 0 {
+    x = x - 1;
+}
+
+print y;

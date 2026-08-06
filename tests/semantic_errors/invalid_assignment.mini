@@ -1,0 +1,11 @@
+// EXPECTED: semantic error — "invalid assignment". `x > 0` evaluates to
+// a bool, being assigned into `y`, declared as int. Kept deliberately
+// distinct from type_mismatch.mini (numeric-into-bool) to test the
+// opposite direction (bool-into-numeric), per the manual's "or similar"
+// wording in Section 4.5.
+
+int x;
+int y;
+x = 5;
+y = (x > 0);
+print y;
