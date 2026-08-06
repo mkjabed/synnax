@@ -1,0 +1,7 @@
+// EXPECTED: semantic error — "type mismatch". `5 + 3.2` evaluates to a
+// numeric (float) result, which is being assigned to `b`, declared as
+// bool. Mirrors the manual's own illustrative example (Section 4.5).
+
+bool b;
+b = 5 + 3.2;
+print b;

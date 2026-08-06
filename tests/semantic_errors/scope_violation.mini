@@ -1,0 +1,16 @@
+// EXPECTED: semantic error — "scope violation" (reported as an
+// undeclared-variable-style lookup failure, since once the block exits,
+// `inner` is no longer in any active scope). `inner` is declared inside
+// the if-block and used after that block has closed, where it is no
+// longer visible.
+
+int x;
+x = 1;
+
+if (x == 1) {
+    int inner;
+    inner = 42;
+    print inner;
+}
+
+print inner;

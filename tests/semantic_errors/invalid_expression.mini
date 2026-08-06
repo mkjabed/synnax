@@ -1,0 +1,12 @@
+// EXPECTED: semantic error — "invalid expression". `&&` requires both
+// operands to be bool; `a` and `b` are declared int, so applying a
+// logical operator to numeric operands is invalid.
+
+int a;
+int b;
+bool c;
+
+a = 1;
+b = 0;
+c = a && b;
+print c;

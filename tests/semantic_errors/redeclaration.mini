@@ -1,0 +1,10 @@
+// EXPECTED: semantic error — "redeclaration". `x` is declared twice in
+// the same (global) scope. Note this is different from shadowing, which
+// is legal when the second declaration is in a nested block — see
+// scope_violation.mini for the contrast.
+
+int x;
+int x;
+
+x = 5;
+print x;
