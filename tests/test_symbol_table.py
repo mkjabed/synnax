@@ -8,7 +8,7 @@ before the real integration happens.
 """
 
 import pytest
-from symbol_table import SymbolTable, RedeclarationError
+from src.symbol_table.symbol_table import SymbolTable, RedeclarationError
 
 
 def test_declare_and_lookup_in_global_scope():
