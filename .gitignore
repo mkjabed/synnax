@@ -1,4 +1,5 @@
 # ANTLR-generated files
+.antlr/
 *.tokens
 *Lexer.py
 *Parser.py
