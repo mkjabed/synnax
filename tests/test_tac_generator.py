@@ -1,6 +1,4 @@
-import pytest
-
-from src.codegen.tac_generator import TacGenerationError, TacGenerator
+from src.codegen.tac_generator import TacGenerator
 from src.parser.parse import parse_source_to_ast
 
 
@@ -23,7 +21,29 @@ def test_literals_and_plain_blocks_need_no_extra_instructions():
     assert lines == ["ok = true", "print false"]
 
 
-def test_control_flow_is_rejected_until_day_8():
-    program = parse_source_to_ast("bool ok; if (ok) { print ok; }")
-    with pytest.raises(TacGenerationError, match="Day 8"):
-        TacGenerator().generate(program)
+def test_generates_tac_for_if_without_else():
+    lines = generate("bool ok; int x; if (ok) { x = 1; } print x;")
+    assert lines == ["ifFalse ok goto L1", "x = 1", "L1:", "print x"]
+
+
+def test_generates_tac_for_if_else():
+    lines = generate("bool ok; int x; if (ok) { x = 1; } else { x = 2; }")
+    assert lines == [
+        "ifFalse ok goto L1", "x = 1", "goto L2", "L1:", "x = 2", "L2:"
+    ]
+
+
+def test_generates_tac_for_while_with_expression_condition():
+    lines = generate("int x; while (x > 0) { x = x - 1; }")
+    assert lines == [
+        "L1:", "t1 = x > 0", "ifFalse t1 goto L2", "t2 = x - 1",
+        "x = t2", "goto L1", "L2:"
+    ]
+
+
+def test_labels_are_unique_for_nested_control_flow():
+    lines = generate("bool a; bool b; while (a) { if (b) { print b; } }")
+    assert lines == [
+        "L1:", "ifFalse a goto L2", "ifFalse b goto L3", "print b", "L3:",
+        "goto L1", "L2:"
+    ]

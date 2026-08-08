@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 
 from src.ast.printer import format_ast
-from src.codegen.tac_generator import TacGenerationError, TacGenerator
+from src.codegen.tac_generator import TacGenerator
 from src.parser.parse import parse_source_to_ast
 from src.semantic.semantic_analyzer import SemanticAnalyzer
 
@@ -30,11 +30,7 @@ def main() -> int:
             print(f"Semantic error [{error.rule}] line {error.line}: {error.message}")
         return 1
     if args.tac:
-        try:
-            print("\n".join(TacGenerator().generate(program)))
-        except TacGenerationError as error:
-            print(f"TAC generation error: {error}")
-            return 1
+        print("\n".join(TacGenerator().generate(program)))
     if args.ast:
         print(format_ast(program))
     print("Compilation succeeded.")
