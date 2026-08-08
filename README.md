@@ -28,3 +28,7 @@ Run the automated tests:
 ```sh
 make test
 ```
+
+The test suite runs all nine required programs: one valid program through
+expected TAC output, one lexical error, one syntax-recovery case, and one
+program for each of the six semantic res.
