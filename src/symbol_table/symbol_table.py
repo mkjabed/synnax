@@ -22,6 +22,13 @@ class SymbolEntry:
     declared_line: int
 
 
+@dataclass(frozen=True)
+class ScopeSnapshot:
+    """Read-only record of a scope after it has left the active stack."""
+    depth: int
+    entries: tuple[SymbolEntry, ...]
+
+
 class RedeclarationError(Exception):
     """Raised when a name is declared twice in the SAME scope."""
     def __init__(self, name: str, line: int, original_line: int):
@@ -38,6 +45,8 @@ class SymbolTable:
     def __init__(self):
         # Index 0 is always the global scope. It is never popped.
         self._scopes: list[dict[str, SymbolEntry]] = [{}]
+        # Diagnostic history only. Lookup continues to consult _scopes alone.
+        self._scope_history: list[ScopeSnapshot] = []
 
     @property
     def current_depth(self) -> int:
@@ -53,7 +62,21 @@ class SymbolTable:
         becomes invisible again — this IS the scope-violation guarantee."""
         if len(self._scopes) == 1:
             raise RuntimeError("Cannot exit the global scope")
+        self._scope_history.append(ScopeSnapshot(
+            depth=self.current_depth,
+            entries=tuple(self._scopes[-1].values()),
+        ))
         self._scopes.pop()
+
+    @property
+    def scope_history(self) -> tuple[ScopeSnapshot, ...]:
+        """Completed scopes, in exit order, for read-only diagnostics."""
+        return tuple(self._scope_history)
+
+    @property
+    def active_scopes(self) -> tuple[tuple[SymbolEntry, ...], ...]:
+        """Entries currently available to lookup, grouped by scope depth."""
+        return tuple(tuple(scope.values()) for scope in self._scopes)
 
     def declare(self, name: str, var_type: str, line: int) -> None:
         """Declare a new symbol in the CURRENT (innermost) scope.

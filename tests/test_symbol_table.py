@@ -122,3 +122,16 @@ def test_outer_variable_visible_from_nested_scope():
     assert entry is not None
     assert entry.scope_level == 0   # still reports its ORIGINAL scope level
     st.exit_scope()
+
+
+def test_closed_scope_is_recorded_without_remaining_lookup_visible():
+    st = SymbolTable()
+    st.enter_scope()
+    st.declare("inner", "bool", line=4)
+    st.exit_scope()
+
+    assert st.lookup("inner") is None
+    assert len(st.scope_history) == 1
+    snapshot = st.scope_history[0]
+    assert snapshot.depth == 1
+    assert snapshot.entries[0].name == "inner"
