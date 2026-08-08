@@ -17,6 +17,14 @@ Compile a program through parsing and semantic analysis:
 make run FILE=tests/valid/valid_program.mini
 ```
 
+Generate TAC for programs using expressions, assignments, and `print`:
+
+```sh
+python -m src.main path/to/program.mini --tac
+```
+
+Control-flow TAC (`if` and `while`) is the Day 8 milestone.
+
 Run the automated tests:
 
 ```sh
