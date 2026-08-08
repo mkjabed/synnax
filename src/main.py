@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from src.ast.printer import format_ast
+from src.codegen.tac_generator import TacGenerationError, TacGenerator
 from src.parser.parse import parse_source_to_ast
 from src.semantic.semantic_analyzer import SemanticAnalyzer
 
@@ -12,6 +13,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Parse and semantically validate a Mini program.")
     parser.add_argument("file", type=Path, help="Path to a .mini source file")
     parser.add_argument("--ast", action="store_true", help="Print the AST after successful parsing")
+    parser.add_argument("--tac", action="store_true", help="Print three-address code after semantic analysis")
     args = parser.parse_args()
 
     try:
@@ -27,6 +29,12 @@ def main() -> int:
         for error in errors:
             print(f"Semantic error [{error.rule}] line {error.line}: {error.message}")
         return 1
+    if args.tac:
+        try:
+            print("\n".join(TacGenerator().generate(program)))
+        except TacGenerationError as error:
+            print(f"TAC generation error: {error}")
+            return 1
     if args.ast:
         print(format_ast(program))
     print("Compilation succeeded.")
