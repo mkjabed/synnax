@@ -1,8 +1,9 @@
 generate:
-	# Placeholder: run antlr4 on src/lexer/*.g4 and src/parser/*.g4, generating into those same folders.
+	antlr4 -Dlanguage=Python3 -visitor -no-listener src/lexer/MiniLexer.g4
+	antlr4 -Dlanguage=Python3 -visitor -no-listener -lib src/lexer src/parser/MiniParser.g4
 
 run:
-	# Placeholder: run the compiler pipeline against $(FILE).
+	python -m src.main $(FILE)
 
 test:
-	# Placeholder: run pytest against tests/.
+	pytest -q
