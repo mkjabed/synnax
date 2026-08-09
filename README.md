@@ -85,6 +85,11 @@ TAC is the terminal output of this compiler front end: the project does not gene
 
 `--tokens` and `--symtable` are documented diagnostic flags for inspecting lexer output and symbol-table state. The documented CLI invocation is `python -m src.main`, which preserves package-relative imports.
 
+## Development Notes
+
+This project was developed with assistance from AI tools (Claude, Codex) for code generation, architecture guidance, and debugging. All code was reviewed,
+tested, and verified by hand to ensure correctness and understanding per the course AI usage policy (Section 10).
+
 ## Project Structure
 
 ```text
@@ -139,3 +144,10 @@ The listing excludes `.git`, `__pycache__`, `.antlr`, pytest-cache directories, 
 - [Formal grammar](docs/cfg.md)
 - [AST schema](docs/ast-schema.md)
 - [Design decisions](docs/decisions.md)
+
+## References
+
+- Compiler Construction Lab: Project Manual, Metropolitan University, Bangladesh, Department of Computer Science and Engineering
+- Anthropic Claude and OpenAI Codex for code assistance and architecture review
+- ANTLR4 documentation (https://www.antlr.org/)
+- Smith, James. _From Source Code To Machine Code: Build Your Own Compiler From Scratch_. Build Your Own X From Scratch series, 2023.
