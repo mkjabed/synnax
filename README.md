@@ -148,6 +148,6 @@ The listing excludes `.git`, `__pycache__`, `.antlr`, pytest-cache directories, 
 ## References
 
 - Compiler Construction Lab: Project Manual, Metropolitan University, Bangladesh, Department of Computer Science and Engineering
-- Anthropic Claude and GitHub Copilot for code assistance and architecture review
+- Anthropic Claude and OpenAI Codex for code assistance and architecture review
 - ANTLR4 documentation (https://www.antlr.org/)
 - Smith, James. _From Source Code To Machine Code: Build Your Own Compiler From Scratch_. Build Your Own X From Scratch series, 2023.
