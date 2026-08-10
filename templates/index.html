@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Synnax Compiler Demo</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: system-ui, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f4f7fb;
+        color: #172033;
+      }
+      main {
+        width: min(1400px, calc(100% - 32px));
+        margin: 32px auto;
+      }
+      h1 {
+        margin: 0;
+        font-size: 1.8rem;
+      }
+      .subtitle {
+        margin: 6px 0 22px;
+        color: #58657a;
+      }
+      .editor,
+      .panel {
+        background: #fff;
+        border: 1px solid #d8e0eb;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px #1720330d;
+      }
+      .editor {
+        padding: 16px;
+      }
+      label,
+      .panel h2 {
+        display: block;
+        margin: 0 0 9px;
+        font-size: 0.86rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      textarea,
+      pre {
+        width: 100%;
+        margin: 0;
+        border: 1px solid #c6d1df;
+        border-radius: 6px;
+        background: #101827;
+        color: #e7edf7;
+        font:
+          0.9rem/1.5 Consolas,
+          "Courier New",
+          monospace;
+      }
+      textarea {
+        min-height: 270px;
+        padding: 14px;
+        resize: vertical;
+      }
+      pre {
+        min-height: 180px;
+        padding: 13px;
+        overflow: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .controls {
+        display: flex;
+        gap: 10px;
+        margin-top: 12px;
+      }
+      button {
+        border: 0;
+        border-radius: 6px;
+        padding: 10px 16px;
+        background: #1769e0;
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #1057bd;
+      }
+      button:disabled {
+        cursor: wait;
+        opacity: 0.7;
+      }
+      .secondary {
+        background: #e7edf7;
+        color: #23324a;
+      }
+      .secondary:hover {
+        background: #d8e2f1;
+      }
+      #errors {
+        display: none;
+        margin: 16px 0 0;
+        padding: 12px 14px;
+        border: 1px solid #efb7b7;
+        border-radius: 7px;
+        background: #fff3f3;
+        color: #a61b1b;
+        font:
+          0.9rem/1.45 Consolas,
+          "Courier New",
+          monospace;
+        white-space: pre-wrap;
+      }
+      .outputs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 16px;
+      }
+      .panel {
+        padding: 14px;
+      }
+      @media (max-width: 760px) {
+        .outputs {
+          grid-template-columns: 1fr;
+        }
+        main {
+          width: min(100% - 20px, 1400px);
+          margin: 18px auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Synnax Compiler</h1>
+      <p class="subtitle">
+        Local presentation demo — source in, compiler artifacts out.
+      </p>
+      <section class="editor">
+        <label for="code">Mini-language source</label>
+        <textarea
+          id="code"
+          spellcheck="false"
+          placeholder="Write a Mini-language program here..."
+        ></textarea>
+        <div class="controls">
+          <button id="compile" type="button">Compile</button>
+          <button id="load-example" class="secondary" type="button">
+            Load Example
+          </button>
+        </div>
+      </section>
+      <div id="errors" role="alert"></div>
+      <section class="outputs" aria-label="Compiler output">
+        <article class="panel">
+          <h2>Tokens</h2>
+          <pre id="tokens"></pre>
+        </article>
+        <article class="panel">
+          <h2>AST</h2>
+          <pre id="ast"></pre>
+        </article>
+        <article class="panel">
+          <h2>Symbol Table</h2>
+          <pre id="symtable"></pre>
+        </article>
+        <article class="panel">
+          <h2>TAC</h2>
+          <pre id="tac"></pre>
+        </article>
+      </section>
+    </main>
+    <script>
+      const exampleCode = {{ example_code | tojson }};
+      const code = document.querySelector('#code');
+      const compileButton = document.querySelector('#compile');
+      const errors = document.querySelector('#errors');
+      const outputIds = ['tokens', 'ast', 'symtable', 'tac'];
+
+      document.querySelector('#load-example').addEventListener('click', () => { code.value = exampleCode; });
+      compileButton.addEventListener('click', compile);
+
+      async function compile() {
+        compileButton.disabled = true;
+        compileButton.textContent = 'Compiling…';
+        errors.style.display = 'none';
+        errors.textContent = '';
+        outputIds.forEach(id => { document.querySelector(`#${id}`).textContent = ''; });
+        try {
+          const response = await fetch('/compile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: code.value })
+          });
+          const result = await response.json();
+          if (!response.ok || result.errors) {
+            errors.textContent = result.errors || 'The compiler request failed.';
+            errors.style.display = 'block';
+            return;
+          }
+          outputIds.forEach(id => { document.querySelector(`#${id}`).textContent = result[id] || ''; });
+        } catch (error) {
+          errors.textContent = `Unable to reach the local compiler: ${error.message}`;
+          errors.style.display = 'block';
+        } finally {
+          compileButton.disabled = false;
+          compileButton.textContent = 'Compile';
+        }
+      }
+    </script>
+  </body>
+</html>
